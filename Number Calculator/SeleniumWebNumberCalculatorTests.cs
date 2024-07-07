@@ -8,11 +8,11 @@ using OpenQA.Selenium.Support.UI;
 
 namespace Number_Calculator
 {
-    // [TestFixture("Chrome")]
-    // [TestFixture("Edge")]
-    [TestFixture("Firefox")]
-    // [TestFixture("Brave")]
-    // [TestFixture("Opera")]
+    [TestFixture("Chrome")]
+    [TestFixture("Edge")]
+    // [TestFixture("Firefox")]
+    [TestFixture("Brave")]
+    [TestFixture("Opera")]
     public class NumberCalculatorTests
     {
         private readonly string browser;
