@@ -8,6 +8,12 @@ using OpenQA.Selenium.Support.UI;
 
 namespace Number_Calculator
 {
+    [TestFixture("Chrome")]
+    [TestFixture("Edge")]
+    [TestFixture("Firefox")]
+    [TestFixture("Brave")]
+    [TestFixture("Opera")]
+    
     public class NumberCalculatorTests
     {
         private readonly string browser;
@@ -92,7 +98,7 @@ namespace Number_Calculator
             var driversDirectory = Environment.GetEnvironmentVariable("DRIVERS_PATH") ?? "./WebDrivers";
             return System.IO.Path.Combine(driversDirectory, driverFileName);
         }
-
+        
         [Test, Order(1), Category("InputValidation")]
         public void ValidateFieldsAcceptOnlyNumbers()
         {
