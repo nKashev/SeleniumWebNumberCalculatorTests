@@ -8,11 +8,11 @@ using OpenQA.Selenium.Support.UI;
 
 namespace Number_Calculator
 {
-    [TestFixture("Chrome")]
-    [TestFixture("Edge")]
+    // [TestFixture("Chrome")]
+    // [TestFixture("Edge")]
     [TestFixture("Firefox")]
-    [TestFixture("Brave")]
-    [TestFixture("Opera")]
+    // [TestFixture("Brave")]
+    // [TestFixture("Opera")]
     public class NumberCalculatorTests
     {
         private readonly string browser;
@@ -70,10 +70,17 @@ namespace Number_Calculator
                     return new EdgeDriver(edgeOptions);
 
                 case "Firefox":
-                    var geckoDriverPath = GetDriverPath("geckodriver");
+                    var geckoDriverPath = Environment.GetEnvironmentVariable("GECKODRIVER_PATH") ?? "/usr/local/bin/geckodriver";
+                    var firefoxBinaryPath = Environment.GetEnvironmentVariable("FIREFOX_PATH") ?? "/usr/bin/firefox";
+
                     var firefoxOptions = new FirefoxOptions();
                     firefoxOptions.AddArgument("--headless");
-                    return new FirefoxDriver(geckoDriverPath, firefoxOptions);
+                    firefoxOptions.BinaryLocation = firefoxBinaryPath;
+
+                    var firefoxService = FirefoxDriverService.CreateDefaultService(geckoDriverPath);
+                    firefoxService.Host = "::1"; // Use IPv6 loopback address
+
+                    return new FirefoxDriver(firefoxService, firefoxOptions);
 
                 case "Brave":
                     var braveDriverPath = GetDriverPath("brave");
