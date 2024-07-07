@@ -1,50 +1,41 @@
-name: Selenium Tests
+name: CI
 
 on:
-  schedule:
-    - cron: '10 12 * * *'  # Runs every day at 12:10 UTC
   push:
     branches:
       - main
   pull_request:
     branches:
       - main
+  schedule:
+    - cron: '30 12 * * *'  # Runs at 12:30 UTC every day
 
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: '6.0'
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '6.0.x'  # Replace with the version you are using
 
-    - name: Install dependencies
-      run: dotnet restore
+      - name: Install .NET SDK 6.0
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y dotnet-sdk-6.0
 
-    - name: Build project
-      run: dotnet build --configuration Release
+      - name: Verify .NET SDK installation
+        run: dotnet --version  # Check .NET version
 
-    - name: Run Selenium tests on Chrome
-      run: |
-        dotnet test --configuration Release --logger "console;verbosity=detailed" --no-build --filter "Category=InputValidation && Browser=Chrome"
+      - name: Restore dependencies
+        run: dotnet restore
 
-    - name: Run Selenium tests on Edge
-      run: |
-        dotnet test --configuration Release --logger "console;verbosity=detailed" --no-build --filter "Category=InputValidation && Browser=Edge"
+      - name: Build
+        run: dotnet build --configuration Release
 
-    - name: Run Selenium tests on Firefox
-      run: |
-        dotnet test --configuration Release --logger "console;verbosity=detailed" --no-build --filter "Category=InputValidation && Browser=Firefox"
-
-    - name: Run Selenium tests on Brave
-      run: |
-        dotnet test --configuration Release --logger "console;verbosity=detailed" --no-build --filter "Category=InputValidation && Browser=Brave"
-
-    - name: Run Selenium tests on Opera
-      run: |
-        dotnet test --configuration Release --logger "console;verbosity=detailed" --no-build --filter "Category=InputValidation && Browser=Opera"
+      - name: Test
+        run: dotnet test --configuration Release --no-build
