@@ -70,17 +70,28 @@ namespace Number_Calculator
                     return new EdgeDriver(edgeOptions);
 
                 case "Firefox":
-                    var geckoDriverPath = Environment.GetEnvironmentVariable("GECKODRIVER_PATH") ?? "/usr/local/bin/geckodriver";
-                    var firefoxBinaryPath = Environment.GetEnvironmentVariable("FIREFOX_PATH") ?? "/usr/bin/firefox";
+                    // var geckoDriverPath = Environment.GetEnvironmentVariable("GECKODRIVER_PATH") ?? "/usr/local/bin/geckodriver";
+                    // var firefoxBinaryPath = Environment.GetEnvironmentVariable("FIREFOX_PATH") ?? "/usr/bin/firefox";
+
+                    // var firefoxOptions = new FirefoxOptions();
+                    // firefoxOptions.AddArgument("--headless");
+                    // firefoxOptions.BinaryLocation = firefoxBinaryPath;
+
+                    // var firefoxService = FirefoxDriverService.CreateDefaultService(geckoDriverPath);
+                    // firefoxService.Host = "::1"; // Use IPv6 loopback address
+
+                    // return new FirefoxDriver(firefoxService, firefoxOptions);
 
                     var firefoxOptions = new FirefoxOptions();
                     firefoxOptions.AddArgument("--headless");
-                    firefoxOptions.BinaryLocation = firefoxBinaryPath;
 
-                    var firefoxService = FirefoxDriverService.CreateDefaultService(geckoDriverPath);
+                    // Increase command timeout
+                    var commandTimeout = TimeSpan.FromMinutes(3);
+
+                    var firefoxService = FirefoxDriverService.CreateDefaultService();
                     firefoxService.Host = "::1"; // Use IPv6 loopback address
 
-                    return new FirefoxDriver(firefoxService, firefoxOptions);
+                    return new FirefoxDriver(firefoxService, firefoxOptions, commandTimeout);
 
                 case "Brave":
                     var braveDriverPath = GetDriverPath("brave");
