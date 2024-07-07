@@ -85,11 +85,14 @@ namespace Number_Calculator
                     var firefoxOptions = new FirefoxOptions();
                     firefoxOptions.AddArgument("--headless");
 
-                    // Increase command timeout
-                    var commandTimeout = TimeSpan.FromMinutes(3);
+                    // Specify the path to the Firefox binary if needed
+                    firefoxOptions.BrowserExecutableLocation = "/usr/bin/firefox"; // Example path
 
                     var firefoxService = FirefoxDriverService.CreateDefaultService();
                     firefoxService.Host = "::1"; // Use IPv6 loopback address
+
+                    // Increase command timeout
+                    var commandTimeout = TimeSpan.FromMinutes(3);
 
                     return new FirefoxDriver(firefoxService, firefoxOptions, commandTimeout);
 
