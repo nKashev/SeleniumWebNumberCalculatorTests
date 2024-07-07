@@ -19,6 +19,11 @@ namespace Number_Calculator
         private readonly string browser;
         private IWebDriver driver;
 
+        public NumberCalculatorTests()
+        {
+            // Parameterless constructor
+        }
+
         public NumberCalculatorTests(string browser)
         {
             this.browser = browser;
