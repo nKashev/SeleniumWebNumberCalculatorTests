@@ -8,7 +8,7 @@ on:
     branches:
       - main
   schedule:
-    - cron: '30 20 * * *'  # Runs at 20:30 UTC every day
+    - cron: '0 20 * * *'  # Runs at 20:00 UTC every day
 
 jobs:
   build:
@@ -29,22 +29,14 @@ jobs:
       - name: Verify .NET SDK installation
         run: dotnet --version  # Check .NET version
 
-      - name: Clear .NET tools cache
+      - name: Clear .NET tools cache and restore
         run: |
           dotnet nuget locals --clear all
           dotnet tool restore
 
-      - name: Install NUnit Console Runner
-        run: dotnet tool install --global NUnit.Console --version 3.17.0  # Replace with the desired version if needed
-
-      # - name: Install Firefox and GeckoDriver
-      #   run: |
-      #     sudo apt-get update
-      #     sudo apt-get install -y firefox
-      #     GECKODRIVER_VERSION=$(curl -s https://api.github.com/repos/mozilla/geckodriver/releases/latest | grep 'tag_name' | cut -d\" -f4)
-      #     wget https://github.com/mozilla/geckodriver/releases/download/$GECKODRIVER_VERSION/geckodriver-$GECKODRIVER_VERSION-linux64.tar.gz
-      #     tar -xzf geckodriver-$GECKODRIVER_VERSION-linux64.tar.gz
-      #     sudo mv geckodriver /usr/local/bin/
+      - name: Install NUnit.Console Runner
+        run: |
+          dotnet tool install --global NUnit.Console --version 3.17.0
 
       - name: Restore dependencies
         run: dotnet restore
