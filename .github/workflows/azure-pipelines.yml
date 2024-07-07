@@ -8,7 +8,7 @@ on:
     branches:
       - main
   schedule:
-    - cron: '0 20 * * *'  # Runs at 20:00 UTC every day
+    - cron: '30 20 * * *'  # Runs at 20:30 UTC every day
 
 jobs:
   build:
@@ -29,8 +29,13 @@ jobs:
       - name: Verify .NET SDK installation
         run: dotnet --version  # Check .NET version
 
+      - name: Clear .NET tools cache
+        run: |
+          dotnet nuget locals --clear all
+          dotnet tool restore
+
       - name: Install NUnit Console Runner
-        run: dotnet tool install --global nunit.console
+        run: dotnet tool install --global NUnit.Console --version 3.17.0  # Replace with the desired version if needed
 
       # - name: Install Firefox and GeckoDriver
       #   run: |
@@ -47,12 +52,8 @@ jobs:
       - name: Build
         run: dotnet build --configuration Release
 
-      - name: Test with Firefox
-        run: |
-          export PATH=$PATH:/usr/local/bin
-          dotnet test --configuration Release --no-build --collect:"XPlat Code Coverage" --filter "Category=FirefoxTests"
-
-      # Optionally, if you want to publish test results and code coverage
+      - name: Test
+        run: dotnet test --configuration Release --no-build --collect:"XPlat Code Coverage"
 
       - name: Publish Test Results
         if: ${{ always() }}
