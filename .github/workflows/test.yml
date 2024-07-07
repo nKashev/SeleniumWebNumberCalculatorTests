@@ -8,7 +8,7 @@ on:
     branches:
       - main
   schedule:
-    - cron: '35 12 * * *'  # Runs at 12:30 UTC every day
+    - cron: '0 0 * * *'  # Runs at 12:35 UTC every day
 
 jobs:
   build:
@@ -47,14 +47,14 @@ jobs:
       - name: Build
         run: dotnet build --configuration Release
 
-      # - name: Test
-      #   run: dotnet test --configuration Release --no-build
+      - name: Test
+        run: dotnet test --configuration Release --no-build
   
-      - name: Start Xvfb and run tests
-        env:
-          DISPLAY: :99
-        run: |
-          sudo Xvfb :99 -ac &
-          sleep 5 # Give xvfb some time to start
-          export PATH=$PATH:/usr/local/bin
-          dotnet test --configuration Release --no-build
+      # - name: Start Xvfb and run tests
+      #   env:
+      #     DISPLAY: :99
+      #   run: |
+      #     sudo Xvfb :99 -ac &
+      #     sleep 5 # Give xvfb some time to start
+      #     export PATH=$PATH:/usr/local/bin
+      #     dotnet test --configuration Release --no-build
