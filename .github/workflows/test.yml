@@ -8,7 +8,7 @@ on:
     branches:
       - main
   schedule:
-    - cron: '30 12 * * *'  # Runs at 12:30 UTC every day
+    - cron: '35 12 * * *'  # Runs at 12:30 UTC every day
 
 jobs:
   build:
@@ -18,15 +18,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Setup .NET SDK
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: '6.0.x'  # Replace with the version you are using
-
       - name: Install .NET SDK 6.0
         run: |
-          sudo apt-get update
-          sudo apt-get install -y dotnet-sdk-6.0
+          wget -O dotnet.tar.gz https://download.visualstudio.microsoft.com/download/pr/20283373-1d83-4879-8278-0afb7fd4035e/56f204f174743b29a656499ad0fc93c3/dotnet-sdk-6.0.100-rc.2.21505.57-linux-x64.tar.gz
+          mkdir -p $HOME/dotnet
+          tar zxf dotnet.tar.gz -C $HOME/dotnet
+          export DOTNET_ROOT=$HOME/dotnet
+          export PATH=$PATH:$HOME/dotnet
 
       - name: Verify .NET SDK installation
         run: dotnet --version  # Check .NET version
