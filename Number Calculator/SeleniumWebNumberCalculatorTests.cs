@@ -1,3 +1,5 @@
+using System;
+using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Edge;
@@ -6,17 +8,10 @@ using OpenQA.Selenium.Support.UI;
 
 namespace Number_Calculator
 {
-    // [TestFixture("Chrome")]
-    // [TestFixture("Edge")]
-    // [TestFixture("Firefox")]
-    // [TestFixture("Brave")]
-    // [TestFixture("Opera")]
-    // [Parallelizable(ParallelScope.All)]
-
     public class NumberCalculatorTests
     {
         private readonly string browser;
-        public IWebDriver driver;
+        private IWebDriver driver;
 
         public NumberCalculatorTests(string browser)
         {
@@ -49,41 +44,31 @@ namespace Number_Calculator
             {
                 case "Chrome":
                     var chromeOptions = new ChromeOptions();
-                    chromeOptions.AddArgument("--headless=new");
+                    chromeOptions.AddArgument("--headless");
                     return new ChromeDriver(chromeOptions);
-                    // return new ChromeDriver();
 
                 case "Edge":
                     var edgeOptions = new EdgeOptions();
                     edgeOptions.AddArgument("--headless");
                     return new EdgeDriver(edgeOptions);
-                    // return new EdgeDriver();
 
                 case "Firefox":
-                    // Specify the absolute path to geckodriver.exe
-                    var geckoDriverPath = @"C:\WebDrivers\geckodriver.exe";
-                    // Specify the path to the Firefox binary
-                    var firefoxBinaryPath = @"C:\Program Files (x86)\Mozilla Firefox\firefox.exe";
-
+                    var geckoDriverPath = GetDriverPath("geckodriver.exe");
                     var firefoxOptions = new FirefoxOptions();
                     firefoxOptions.AddArgument("--headless");
-                    firefoxOptions.BinaryLocation = firefoxBinaryPath;
-
-                    var firefoxService = FirefoxDriverService.CreateDefaultService(geckoDriverPath);
-                    firefoxService.Host = "::1"; // Use IPv6 loopback address
-
-                    return new FirefoxDriver(firefoxService, firefoxOptions);
+                    return new FirefoxDriver(geckoDriverPath, firefoxOptions);
 
                 case "Brave":
+                    var braveDriverPath = GetDriverPath("brave.exe");
                     var braveOptions = new ChromeOptions();
-                    braveOptions.BinaryLocation = @"C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe";
-                    braveOptions.AddArgument("--headless=new");
+                    braveOptions.BinaryLocation = braveDriverPath;
+                    braveOptions.AddArgument("--headless");
                     return new ChromeDriver(braveOptions);
-                    // return new ChromeDriver();
 
                 case "Opera":
+                    var operaDriverPath = GetDriverPath("launcher.exe");
                     var operaOptions = new ChromeOptions();
-                    operaOptions.BinaryLocation = @"C:\Users\123\AppData\Local\Programs\Opera\launcher.exe";
+                    operaOptions.BinaryLocation = operaDriverPath;
                     operaOptions.AddArgument("--no-first-run");
                     operaOptions.AddArgument("--disable-popup-blocking");
                     operaOptions.AddArgument("--disable-notifications");
@@ -95,15 +80,17 @@ namespace Number_Calculator
                     operaOptions.AddArgument("--disable-software-rasterizer");
                     operaOptions.AddArgument("--mute-audio");
                     operaOptions.AddArgument("--headless");
-
-                    // Use ChromeDriver with OperaOptions
-                    var operaDriverPath = @"C:\WebDrivers\operadriver.exe";
-                    var operaService = ChromeDriverService.CreateDefaultService(operaDriverPath);
-                    return new ChromeDriver(operaService, operaOptions);
+                    return new ChromeDriver(operaOptions);
 
                 default:
                     throw new ArgumentException($"Browser not supported: {browser}");
             }
+        }
+
+        private string GetDriverPath(string driverFileName)
+        {
+            var driversDirectory = Environment.GetEnvironmentVariable("DRIVERS_PATH") ?? "./WebDrivers";
+            return System.IO.Path.Combine(driversDirectory, driverFileName);
         }
 
         [Test, Order(1), Category("InputValidation")]
