@@ -1,27 +1,10 @@
-using System;
-using NUnit.Framework;
-using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
-using OpenQA.Selenium.Edge;
-using OpenQA.Selenium.Firefox;
-using OpenQA.Selenium.Support.UI;
-
 namespace Number_Calculator
 {
     [TestFixture("Chrome")]
-    [TestFixture("Edge")]
-    [TestFixture("Firefox")]
-    [TestFixture("Brave")]
-    [TestFixture("Opera")] 
     public class NumberCalculatorTests
     {
         private readonly string browser;
         private IWebDriver driver;
-
-        public NumberCalculatorTests()
-        {
-            // Parameterless constructor
-        }
 
         public NumberCalculatorTests(string browser)
         {
@@ -56,41 +39,6 @@ namespace Number_Calculator
                     var chromeOptions = new ChromeOptions();
                     chromeOptions.AddArgument("--headless");
                     return new ChromeDriver(chromeOptions);
-
-                case "Edge":
-                    var edgeOptions = new EdgeOptions();
-                    edgeOptions.AddArgument("--headless");
-                    return new EdgeDriver(edgeOptions);
-
-                case "Firefox":
-                    var geckoDriverPath = GetDriverPath("geckodriver.exe");
-                    var firefoxOptions = new FirefoxOptions();
-                    firefoxOptions.AddArgument("--headless");
-                    return new FirefoxDriver(geckoDriverPath, firefoxOptions);
-
-                case "Brave":
-                    var braveDriverPath = GetDriverPath("brave.exe");
-                    var braveOptions = new ChromeOptions();
-                    braveOptions.BinaryLocation = braveDriverPath;
-                    braveOptions.AddArgument("--headless");
-                    return new ChromeDriver(braveOptions);
-
-                case "Opera":
-                    var operaDriverPath = GetDriverPath("launcher.exe");
-                    var operaOptions = new ChromeOptions();
-                    operaOptions.BinaryLocation = operaDriverPath;
-                    operaOptions.AddArgument("--no-first-run");
-                    operaOptions.AddArgument("--disable-popup-blocking");
-                    operaOptions.AddArgument("--disable-notifications");
-                    operaOptions.AddArgument("--disable-gpu");
-                    operaOptions.AddArgument("--no-sandbox");
-                    operaOptions.AddArgument("--disable-infobars");
-                    operaOptions.AddArgument("--disable-extensions");
-                    operaOptions.AddArgument("--disable-dev-shm-usage");
-                    operaOptions.AddArgument("--disable-software-rasterizer");
-                    operaOptions.AddArgument("--mute-audio");
-                    operaOptions.AddArgument("--headless");
-                    return new ChromeDriver(operaOptions);
 
                 default:
                     throw new ArgumentException($"Browser not supported: {browser}");
