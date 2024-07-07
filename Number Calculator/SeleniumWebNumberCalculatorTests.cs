@@ -12,8 +12,7 @@ namespace Number_Calculator
     [TestFixture("Edge")]
     [TestFixture("Firefox")]
     [TestFixture("Brave")]
-    [TestFixture("Opera")]
-    
+    [TestFixture("Opera")] 
     public class NumberCalculatorTests
     {
         private readonly string browser;
