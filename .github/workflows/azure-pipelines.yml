@@ -1,0 +1,58 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  schedule:
+    - cron: '30 20 * * *'  # Runs at 20:30 UTC every day
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Install .NET SDK 6.0
+        run: |
+          wget -O dotnet.tar.gz https://download.visualstudio.microsoft.com/download/pr/20283373-1d83-4879-8278-0afb7fd4035e/56f204f174743b29a656499ad0fc93c3/dotnet-sdk-6.0.100-rc.2.21505.57-linux-x64.tar.gz
+          mkdir -p $HOME/dotnet
+          tar zxf dotnet.tar.gz -C $HOME/dotnet
+          export DOTNET_ROOT=$HOME/dotnet
+          export PATH=$PATH:$HOME/dotnet
+
+      - name: Verify .NET SDK installation
+        run: dotnet --version  # Check .NET version
+
+      - name: Install NUnit Console Runner
+        run: dotnet tool install --global nunit.console
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --configuration Release
+
+      - name: Test
+        run: dotnet test --configuration Release --no-build --collect:"XPlat Code Coverage"
+
+      - name: Publish Test Results
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: TestResults
+          path: '**/*.trx'
+
+      - name: Publish Code Coverage
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: CodeCoverage
+          path: |
+            ./coverage.cobertura.xml
+            ./coverage.opencover.xml
