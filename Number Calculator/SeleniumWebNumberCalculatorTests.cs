@@ -7,6 +7,10 @@ using OpenQA.Selenium.Support.UI;
 namespace Number_Calculator
 {
     [TestFixture("Chrome")]
+    [TestFixture("Edge")]
+    [TestFixture("Firefox")]
+    [TestFixture("Brave")]
+    [TestFixture("Opera")]
     public class NumberCalculatorTests
     {
         private readonly string browser;
@@ -53,6 +57,31 @@ namespace Number_Calculator
                     var chromeOptions = new ChromeOptions();
                     chromeOptions.AddArgument("--headless");
                     return new ChromeDriver(chromeOptions);
+
+                case "Edge":
+                    var edgeOptions = new EdgeOptions();
+                    edgeOptions.AddArgument("--headless");
+                    return new EdgeDriver(edgeOptions);
+
+                case "Firefox":
+                    var geckoDriverPath = GetDriverPath("geckodriver");
+                    var firefoxOptions = new FirefoxOptions();
+                    firefoxOptions.AddArgument("--headless");
+                    return new FirefoxDriver(geckoDriverPath, firefoxOptions);
+
+                case "Brave":
+                    var braveDriverPath = GetDriverPath("brave");
+                    var braveOptions = new ChromeOptions();
+                    braveOptions.BinaryLocation = braveDriverPath;
+                    braveOptions.AddArgument("--headless");
+                    return new ChromeDriver(braveOptions);
+
+                case "Opera":
+                    var operaDriverPath = GetDriverPath("opera");
+                    var operaOptions = new ChromeOptions();
+                    operaOptions.BinaryLocation = operaDriverPath;
+                    operaOptions.AddArgument("--headless");
+                    return new ChromeDriver(operaOptions);
 
                 default:
                     throw new ArgumentException($"Browser not supported: {browser}");
