@@ -8,7 +8,7 @@ on:
     branches:
       - main
   schedule:
-    - cron: '0 0 * * *'  # Runs at 12:35 UTC every day
+    - cron: '0 20 * * *'  # Runs at 20:00 UTC every day
 
 jobs:
   build:
@@ -29,17 +29,17 @@ jobs:
       - name: Verify .NET SDK installation
         run: dotnet --version  # Check .NET version
         
-      - name: Install Firefox and GeckoDriver
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y firefox
-          GECKODRIVER_VERSION=$(curl -s https://api.github.com/repos/mozilla/geckodriver/releases/latest | grep 'tag_name' | cut -d\" -f4)
-          wget https://github.com/mozilla/geckodriver/releases/download/$GECKODRIVER_VERSION/geckodriver-$GECKODRIVER_VERSION-linux64.tar.gz
-          tar -xzf geckodriver-$GECKODRIVER_VERSION-linux64.tar.gz
-          sudo mv geckodriver /usr/local/bin/
+      # - name: Install Firefox and GeckoDriver
+      #   run: |
+      #     sudo apt-get update
+      #     sudo apt-get install -y firefox
+      #     GECKODRIVER_VERSION=$(curl -s https://api.github.com/repos/mozilla/geckodriver/releases/latest | grep 'tag_name' | cut -d\" -f4)
+      #     wget https://github.com/mozilla/geckodriver/releases/download/$GECKODRIVER_VERSION/geckodriver-$GECKODRIVER_VERSION-linux64.tar.gz
+      #     tar -xzf geckodriver-$GECKODRIVER_VERSION-linux64.tar.gz
+      #     sudo mv geckodriver /usr/local/bin/
       
-      - name: Install xvfb
-        run: sudo apt-get install -y xvfb libgtk-3-0
+      # - name: Install xvfb
+      #   run: sudo apt-get install -y xvfb libgtk-3-0
 
       - name: Restore dependencies
         run: dotnet restore
