@@ -8,7 +8,7 @@ on:
     branches:
       - main
   schedule:
-    - cron: '30 20 * * *'  # Runs at 20:30 UTC every day
+    - cron: '0 20 * * *'  # Runs at 20:00 UTC every day
 
 jobs:
   build:
@@ -32,14 +32,27 @@ jobs:
       - name: Install NUnit Console Runner
         run: dotnet tool install --global nunit.console
 
+      # - name: Install Firefox and GeckoDriver
+      #   run: |
+      #     sudo apt-get update
+      #     sudo apt-get install -y firefox
+      #     GECKODRIVER_VERSION=$(curl -s https://api.github.com/repos/mozilla/geckodriver/releases/latest | grep 'tag_name' | cut -d\" -f4)
+      #     wget https://github.com/mozilla/geckodriver/releases/download/$GECKODRIVER_VERSION/geckodriver-$GECKODRIVER_VERSION-linux64.tar.gz
+      #     tar -xzf geckodriver-$GECKODRIVER_VERSION-linux64.tar.gz
+      #     sudo mv geckodriver /usr/local/bin/
+
       - name: Restore dependencies
         run: dotnet restore
 
       - name: Build
         run: dotnet build --configuration Release
 
-      - name: Test
-        run: dotnet test --configuration Release --no-build --collect:"XPlat Code Coverage"
+      - name: Test with Firefox
+        run: |
+          export PATH=$PATH:/usr/local/bin
+          dotnet test --configuration Release --no-build --collect:"XPlat Code Coverage" --filter "Category=FirefoxTests"
+
+      # Optionally, if you want to publish test results and code coverage
 
       - name: Publish Test Results
         if: ${{ always() }}
