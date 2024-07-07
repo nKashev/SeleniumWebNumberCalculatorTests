@@ -10,7 +10,7 @@ namespace Number_Calculator
 {
     [TestFixture("Chrome")]
     [TestFixture("Edge")]
-    // [TestFixture("Firefox")]
+    [TestFixture("Firefox")]
     [TestFixture("Brave")]
     [TestFixture("Opera")]
     public class NumberCalculatorTests
@@ -47,8 +47,12 @@ namespace Number_Calculator
         [TearDown]
         public void TearDown()
         {
-            driver.Quit();
-            driver.Dispose();
+            if (driver != null)
+            {
+                driver.Quit();
+                driver.Dispose();
+                driver = null;
+            }
         }
 
         private IWebDriver GetWebDriver(string browser)
