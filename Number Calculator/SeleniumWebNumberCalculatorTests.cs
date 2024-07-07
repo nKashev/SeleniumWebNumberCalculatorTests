@@ -1,3 +1,9 @@
+using System;
+using NUnit.Framework;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Support.UI;
+
 namespace Number_Calculator
 {
     [TestFixture("Chrome")]
@@ -6,7 +12,15 @@ namespace Number_Calculator
         private readonly string browser;
         private IWebDriver driver;
 
-        public NumberCalculatorTests(string browser)
+        // Parameterless constructor
+        public NumberCalculatorTests()
+        {
+            // This constructor can be used by NUnit to instantiate the test fixture.
+            //  May leave it empty or add initialization logic if needed.
+        }
+
+        // Constructor with a parameter for the browser
+        public NumberCalculatorTests(string browser) : this()
         {
             this.browser = browser;
         }
