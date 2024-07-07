@@ -1,6 +1,8 @@
 name: Selenium Tests
 
 on:
+  schedule:
+    - cron: '15 12 * * *'  # Runs every day at 12:15 UTC
   push:
     branches:
       - main
@@ -13,31 +15,36 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+    - name: Checkout repository
+      uses: actions/checkout@v2
 
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: '6.0.x'  # Replace with the version you are using
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '6.0.0'
 
-      - name: Restore dependencies
-        run: dotnet restore
+    - name: Install dependencies
+      run: dotnet restore
 
-      - name: Build
-        run: dotnet build --configuration Release
+    - name: Build project
+      run: dotnet build --configuration Release
 
-      - name: Test in Chrome
-        run: dotnet test --configuration Release --filter "TestCategory=Chrome" --no-build --verbosity normal
+    - name: Run Selenium tests on Chrome
+      run: |
+        dotnet test --configuration Release --logger "console;verbosity=detailed" --no-build --filter "Category=InputValidation && Browser=Chrome"
 
-      - name: Test in Edge
-        run: dotnet test --configuration Release --filter "TestCategory=Edge" --no-build --verbosity normal
+    - name: Run Selenium tests on Edge
+      run: |
+        dotnet test --configuration Release --logger "console;verbosity=detailed" --no-build --filter "Category=InputValidation && Browser=Edge"
 
-      - name: Test in Firefox
-        run: dotnet test --configuration Release --filter "TestCategory=Firefox" --no-build --verbosity normal
+    - name: Run Selenium tests on Firefox
+      run: |
+        dotnet test --configuration Release --logger "console;verbosity=detailed" --no-build --filter "Category=InputValidation && Browser=Firefox"
 
-      - name: Test in Brave
-        run: dotnet test --configuration Release --filter "TestCategory=Brave" --no-build --verbosity normal
+    - name: Run Selenium tests on Brave
+      run: |
+        dotnet test --configuration Release --logger "console;verbosity=detailed" --no-build --filter "Category=InputValidation && Browser=Brave"
 
-      - name: Test in Opera
-        run: dotnet test --configuration Release --filter "TestCategory=Opera" --no-build --verbosity normal
+    - name: Run Selenium tests on Opera
+      run: |
+        dotnet test --configuration Release --logger "console;verbosity=detailed" --no-build --filter "Category=InputValidation && Browser=Opera"
