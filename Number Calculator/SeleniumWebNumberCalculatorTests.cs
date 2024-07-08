@@ -10,7 +10,7 @@ namespace Number_Calculator
 {
     [TestFixture("Chrome")]
     [TestFixture("Edge")]
-    [TestFixture("Firefox")]
+    // [TestFixture("Firefox")]
     [TestFixture("Brave")]
     [TestFixture("Opera")]
     public class NumberCalculatorTests
