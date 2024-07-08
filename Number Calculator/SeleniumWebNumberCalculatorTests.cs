@@ -10,7 +10,7 @@ namespace Number_Calculator
 {
     [TestFixture("Chrome")]
     [TestFixture("Edge")]
-    // [TestFixture("Firefox")]
+    [TestFixture("Firefox")]
     [TestFixture("Brave")]
     [TestFixture("Opera")]
     public class NumberCalculatorTests
@@ -86,7 +86,7 @@ namespace Number_Calculator
                     firefoxOptions.AddArgument("--headless");
 
                     // Specify the path to the Firefox binary if needed
-                    firefoxOptions.BrowserExecutableLocation = "/usr/bin/firefox"; // Example path
+                    firefoxOptions.BinaryLocation = "/usr/bin/firefox";
 
                     var firefoxService = FirefoxDriverService.CreateDefaultService();
                     firefoxService.Host = "::1"; // Use IPv6 loopback address
