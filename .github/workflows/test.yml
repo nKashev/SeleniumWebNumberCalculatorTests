@@ -29,32 +29,31 @@ jobs:
       - name: Verify .NET SDK installation
         run: dotnet --version  # Check .NET version
         
-      # - name: Install Firefox and GeckoDriver
-      #   run: |
-      #     sudo apt-get update
-      #     sudo apt-get install -y firefox
-      #     GECKODRIVER_VERSION=$(curl -s https://api.github.com/repos/mozilla/geckodriver/releases/latest | grep 'tag_name' | cut -d\" -f4)
-      #     wget https://github.com/mozilla/geckodriver/releases/download/$GECKODRIVER_VERSION/geckodriver-$GECKODRIVER_VERSION-linux64.tar.gz
-      #     tar -xzf geckodriver-$GECKODRIVER_VERSION-linux64.tar.gz
-      #     sudo mv geckodriver /usr/local/bin/
+      - name: Install Firefox and GeckoDriver
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y firefox
+          GECKODRIVER_VERSION=$(curl -s https://api.github.com/repos/mozilla/geckodriver/releases/latest | grep 'tag_name' | cut -d\" -f4)
+          wget https://github.com/mozilla/geckodriver/releases/download/$GECKODRIVER_VERSION/geckodriver-$GECKODRIVER_VERSION-linux64.tar.gz
+          tar -xzf geckodriver-$GECKODRIVER_VERSION-linux64.tar.gz
+          sudo mv geckodriver /usr/local/bin/
       
-      # - name: Install xvfb
-      #   run: sudo apt-get install -y xvfb libgtk-3-0
+      - name: Install xvfb
+        run: sudo apt-get install -y xvfb libgtk-3-0
 
       - name: Restore dependencies
         run: dotnet restore
 
       - name: Build
         run: dotnet build --configuration Release
+  
+      - name: Start Xvfb
+        env:
+          DISPLAY: :99
+        run: |
+          sudo Xvfb :99 -ac &
+          sleep 5 # Give xvfb some time to start
+          export PATH=$PATH:/usr/local/bin
 
       - name: Test
         run: dotnet test --configuration Release --no-build
-  
-      # - name: Start Xvfb and run tests
-      #   env:
-      #     DISPLAY: :99
-      #   run: |
-      #     sudo Xvfb :99 -ac &
-      #     sleep 5 # Give xvfb some time to start
-      #     export PATH=$PATH:/usr/local/bin
-      #     dotnet test --configuration Release --no-build
