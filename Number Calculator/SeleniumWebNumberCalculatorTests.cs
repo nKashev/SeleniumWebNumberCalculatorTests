@@ -13,7 +13,7 @@ namespace Number_Calculator
     // [TestFixture("Firefox")]
     [TestFixture("Brave")]
     [TestFixture("Opera")]
-    [Parallelizable(ParallelScope.All)]
+    // [Parallelizable(ParallelScope.All)]
     public class NumberCalculatorTests
     {
         private readonly string browser;
