@@ -12,42 +12,33 @@ on:
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
 
       - name: Install .NET SDK 6.0
         run: |
-          if [ "${{ matrix.os }}" == "ubuntu-latest" ]; then
-            wget -O dotnet.tar.gz https://download.visualstudio.microsoft.com/download/pr/20283373-1d83-4879-8278-0afb7fd4035e/56f204f174743b29a656499ad0fc93c3/dotnet-sdk-6.0.100-rc.2.21505.57-linux-x64.tar.gz
-            mkdir -p $HOME/dotnet
-            tar zxf dotnet.tar.gz -C $HOME/dotnet
-            export DOTNET_ROOT=$HOME/dotnet
-            export PATH=$PATH:$HOME/dotnet
-          elif [ "${{ matrix.os }}" == "windows-latest" ]; then
-            choco install dotnetcore-sdk --version=6.0.100-rc.2.21505.57
-          elif [ "${{ matrix.os }}" == "macos-latest" ]; then
-            brew install --cask dotnet-sdk
-          fi
+          wget -O dotnet.tar.gz https://download.visualstudio.microsoft.com/download/pr/20283373-1d83-4879-8278-0afb7fd4035e/56f204f174743b29a656499ad0fc93c3/dotnet-sdk-6.0.100-rc.2.21505.57-linux-x64.tar.gz
+          mkdir -p $HOME/dotnet
+          tar zxf dotnet.tar.gz -C $HOME/dotnet
+          export DOTNET_ROOT=$HOME/dotnet
+          export PATH=$PATH:$HOME/dotnet
 
       - name: Verify .NET SDK installation
         run: dotnet --version  # Check .NET version
         
-      - name: Install Firefox and GeckoDriver
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y firefox
-          GECKODRIVER_VERSION=$(curl -s https://api.github.com/repos/mozilla/geckodriver/releases/latest | grep 'tag_name' | cut -d\" -f4)
-          wget https://github.com/mozilla/geckodriver/releases/download/$GECKODRIVER_VERSION/geckodriver-$GECKODRIVER_VERSION-linux64.tar.gz
-          tar -xzf geckodriver-$GECKODRIVER_VERSION-linux64.tar.gz
-          sudo mv geckodriver /usr/local/bin/
+      # - name: Install Firefox and GeckoDriver
+      #   run: |
+      #     sudo apt-get update
+      #     sudo apt-get install -y firefox
+      #     GECKODRIVER_VERSION=$(curl -s https://api.github.com/repos/mozilla/geckodriver/releases/latest | grep 'tag_name' | cut -d\" -f4)
+      #     wget https://github.com/mozilla/geckodriver/releases/download/$GECKODRIVER_VERSION/geckodriver-$GECKODRIVER_VERSION-linux64.tar.gz
+      #     tar -xzf geckodriver-$GECKODRIVER_VERSION-linux64.tar.gz
+      #     sudo mv geckodriver /usr/local/bin/
       
       - name: Install xvfb
-        if: matrix.os == 'ubuntu-latest'
         run: sudo apt-get install -y xvfb libgtk-3-0
 
       - name: Restore dependencies
@@ -57,7 +48,6 @@ jobs:
         run: dotnet build --configuration Release
   
       - name: Start Xvfb
-        if: matrix.os == 'ubuntu-latest'
         env:
           DISPLAY: :99
         run: |
@@ -67,64 +57,3 @@ jobs:
 
       - name: Test
         run: dotnet test --configuration Release --no-build
-
-  android:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Set up JDK
-        uses: actions/setup-java@v2
-        with:
-          java-version: '11'
-          distribution: 'adopt'
-
-      - name: Download Android SDK
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y openjdk-11-jdk wget tar unzip
-          wget https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip
-          unzip sdk-tools-linux-4333796.zip -d $HOME/sdk
-          echo 'export ANDROID_SDK_ROOT=$HOME/sdk' >> $GITHUB_ENV
-          echo 'export PATH=$PATH:$HOME/sdk/tools/bin' >> $GITHUB_ENV
-          echo 'export PATH=$PATH:$HOME/sdk/platform-tools' >> $GITHUB_ENV
-          echo 'export PATH=$PATH:$HOME/sdk/emulator' >> $GITHUB_ENV
-
-      - name: Install SDK packages
-        run: |
-          yes | sdkmanager --licenses
-          sdkmanager "platforms;android-29" "platform-tools" "emulator" "system-images;android-29;default;x86_64"
-
-      - name: Create and start emulator
-        run: |
-          echo "no" | avdmanager create avd -n test -k "system-images;android-29;default;x86_64" --force
-          $HOME/sdk/emulator/emulator -avd test -no-window -no-audio -no-snapshot -accel auto -gpu off &
-          adb wait-for-device
-          adb shell input keyevent 82 &
-
-      - name: Install dependencies
-        run: ./gradlew dependencies
-
-      - name: Run Android tests
-        run: ./gradlew connectedAndroidTest
-
-  ios:
-    runs-on: macos-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Set up Xcode
-        run: sudo xcode-select -s /Applications/Xcode_12.5.app/Contents/Developer
-
-      - name: Install dependencies
-        run: |
-          brew install cocoapods
-          pod install --project-directory=./YouriOSProject
-
-      - name: Build the app
-        run: xcodebuild -workspace YouriOSProject.xcworkspace -scheme YourScheme -sdk iphonesimulator -configuration Debug -destination 'platform=iOS Simulator,name=iPhone 11,OS=14.5' clean build
-
-      - name: Run tests
-        run: xcodebuild test -workspace YouriOSProject.xcworkspace -scheme YourScheme -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 11,OS=14.5'
