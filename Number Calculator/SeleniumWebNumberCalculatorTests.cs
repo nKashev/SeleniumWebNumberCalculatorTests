@@ -81,7 +81,7 @@ namespace Number_Calculator
                     var firefoxService = FirefoxDriverService.CreateDefaultService(geckoDriverPath);
                     firefoxService.Host = "::1"; // Use IPv6 loopback address
                     
-                    // return new FirefoxDriver(firefoxService, firefoxOptions);
+                    return new FirefoxDriver(firefoxService, firefoxOptions);
 
                     // var firefoxOptions = new FirefoxOptions();
                     // firefoxOptions.AddArgument("--headless");
@@ -93,9 +93,9 @@ namespace Number_Calculator
                     // firefoxService.Host = "::1"; // Use IPv6 loopback address
 
                     // Increase command timeout
-                    var commandTimeout = TimeSpan.FromMinutes(3);
+                    // var commandTimeout = TimeSpan.FromMinutes(3);
                     
-                    return new FirefoxDriver(firefoxService, firefoxOptions, commandTimeout);
+                    // return new FirefoxDriver(firefoxService, firefoxOptions, commandTimeout);
 
                 case "Brave":
                     var braveDriverPath = GetDriverPath("brave");
