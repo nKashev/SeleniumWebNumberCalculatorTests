@@ -71,31 +71,31 @@ namespace Number_Calculator
                     return new EdgeDriver(edgeOptions);
 
                 case "Firefox":
-                    var geckoDriverPath = GetDriverPath("geckodriver");
-                    var firefoxBinaryPath = GetDriverPath("firefox");
-
-                    var firefoxOptions = new FirefoxOptions();
-                    firefoxOptions.AddArgument("--headless");
-                    firefoxOptions.BinaryLocation = firefoxBinaryPath;
-
-                    var firefoxService = FirefoxDriverService.CreateDefaultService(geckoDriverPath);
-                    firefoxService.Host = "::1"; // Use IPv6 loopback address
-                    
-                    return new FirefoxDriver(firefoxService, firefoxOptions);
+                    // var geckoDriverPath = GetDriverPath("geckodriver");
+                    // var firefoxBinaryPath = GetDriverPath("firefox");
 
                     // var firefoxOptions = new FirefoxOptions();
                     // firefoxOptions.AddArgument("--headless");
+                    // firefoxOptions.BinaryLocation = firefoxBinaryPath;
 
-                    // // Specify the path to the Firefox binary if needed
-                    // firefoxOptions.BinaryLocation = "/usr/bin/firefox";
-
-                    // var firefoxService = FirefoxDriverService.CreateDefaultService();
+                    // var firefoxService = FirefoxDriverService.CreateDefaultService(geckoDriverPath);
                     // firefoxService.Host = "::1"; // Use IPv6 loopback address
+
+                    var firefoxOptions = new FirefoxOptions();
+                    firefoxOptions.AddArgument("--headless");
+
+                    // Specify the path to the Firefox binary if needed
+                    firefoxOptions.BinaryLocation = "/usr/bin/firefox";
+
+                    var firefoxService = FirefoxDriverService.CreateDefaultService();
+                    firefoxService.Host = "::1"; // Use IPv6 loopback address
 
                     // Increase command timeout
                     // var commandTimeout = TimeSpan.FromMinutes(3);
                     
                     // return new FirefoxDriver(firefoxService, firefoxOptions, commandTimeout);
+                    
+                    return new FirefoxDriver(firefoxService, firefoxOptions);
 
                 case "Brave":
                     var braveDriverPath = GetDriverPath("brave");
