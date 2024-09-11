@@ -20,16 +20,16 @@ namespace Number_Calculator
         private IWebDriver driver;
 
         // Parameterless constructor
-        public NumberCalculatorTests()
-        {
+        // public NumberCalculatorTests()
+        // {
             // This constructor can be used by NUnit to instantiate the test fixture.
             //  May leave it empty or add initialization logic if needed.
-        }
+        // }
 
         // Constructor with a parameter for the browser
-        public NumberCalculatorTests(string browser) : this()
+        public NumberCalculatorTests(string browser)
         {
-            this.browser = browser;
+            this.browser = browser ?? throw new ArgumentNullException(nameof(browser));
         }
 
         [SetUp]
