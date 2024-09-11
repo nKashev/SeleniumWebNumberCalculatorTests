@@ -5,6 +5,7 @@ using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Edge;
 using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Support.UI;
+using OpenQA.Selenium.Opera;
 
 namespace Number_Calculator
 {
@@ -105,11 +106,11 @@ namespace Number_Calculator
                     return new ChromeDriver(braveOptions);
 
                 case "Opera":
-                    var operaDriverPath = GetDriverPath("opera");
-                    var operaOptions = new ChromeOptions();
-                    operaOptions.BinaryLocation = operaDriverPath;
-                    operaOptions.AddArgument("--headless");
-                    return new ChromeDriver(operaOptions);
+                    var operaBinaryPath = GetDriverPath("opera.exe"); // Path to Opera binary
+                    var chromeOptionsForOpera = new ChromeOptions();
+                    chromeOptionsForOpera.BinaryLocation = operaBinaryPath;
+                    chromeOptionsForOpera.AddArgument("--headless");
+                    return new ChromeDriver(chromeOptionsForOpera);
 
                 default:
                     throw new ArgumentException($"Browser not supported: {browser}");
