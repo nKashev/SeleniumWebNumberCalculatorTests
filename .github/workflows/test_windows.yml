@@ -11,55 +11,16 @@ on:
     - cron: '0 15 * * *'  # Runs at 15:00 UTC every day
 
 jobs:
-  build-linux:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Install .NET SDK 6.0
-        run: |
-          wget -O dotnet.tar.gz https://download.visualstudio.microsoft.com/download/pr/20283373-1d83-4879-8278-0afb7fd4035e/56f204f174743b29a656499ad0fc93c3/dotnet-sdk-6.0.100-rc.2.21505.57-linux-x64.tar.gz
-          mkdir -p $HOME/dotnet
-          tar zxf dotnet.tar.gz -C $HOME/dotnet
-          export DOTNET_ROOT=$HOME/dotnet
-          export PATH=$PATH:$HOME/dotnet
-
-      - name: Verify .NET SDK installation
-        run: dotnet --version  # Check .NET version
-
-      - name: Install xvfb
-        run: sudo apt-get install -y xvfb libgtk-3-0
-
-      - name: Restore dependencies
-        run: dotnet restore
-
-      - name: Build
-        run: dotnet build --configuration Release
-
-      - name: Start Xvfb
-        env:
-          DISPLAY: :99
-        run: |
-          sudo Xvfb :99 -ac &
-          sleep 5 # Give xvfb some time to start
-          export PATH=$PATH:/usr/local/bin
-
-      - name: Test
-        run: dotnet test --configuration Release --no-build
-
   build-windows:
     runs-on: windows-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
-      - name: Install .NET SDK 6.0
-        run: |
-          Invoke-WebRequest -Uri https://download.visualstudio.microsoft.com/download/pr/20283373-1d83-4879-8278-0afb7fd4035e/56f204f174743b29a656499ad0fc93c3/dotnet-sdk-6.0.100-rc.2.21505.57-win-x64.zip -OutFile dotnet-sdk.zip
-          Expand-Archive -Path dotnet-sdk.zip -DestinationPath $env:USERPROFILE\dotnet
-          $env:PATH += ";$env:USERPROFILE\dotnet"
-          dotnet --version  # Check .NET version
+      - name: Set up .NET SDK 6.0
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '6.0.x'
 
       - name: Restore dependencies
         run: dotnet restore
