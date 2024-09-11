@@ -17,7 +17,7 @@ namespace Number_Calculator
     public class NumberCalculatorTests
     {
         private readonly string browser;
-        private IWebDriver driver;
+        private IWebDriver? driver;
 
         // Parameterless constructor
         // public NumberCalculatorTests()
