@@ -1,12 +1,12 @@
 name: Selenuim Tests on Windows
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+  # push:
+  #   branches:
+  #     - main
+  # pull_request:
+  #   branches:
+  #     - main
   schedule:
     - cron: '0 15 * * *'  # Runs at 15:00 UTC every day
 
