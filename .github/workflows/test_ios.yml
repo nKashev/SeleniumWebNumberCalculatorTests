@@ -1,0 +1,31 @@
+name: Playwright Tests on Ubuntu
+
+on:
+  push:
+    branches:
+      - main
+#   pull_request:
+#     branches:
+#       - main
+  schedule:
+    - cron: '00 15 * * *'
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Xcode
+        run: xcode-select --switch /Applications/Xcode.app/Contents/Developer
+
+      - name: Install dependencies
+        run: pod install
+
+      - name: Build
+        run: xcodebuild build -workspace YourProject.xcworkspace -scheme YourScheme
+
+      - name: Test
+        run: xcodebuild test -workspace YourProject.xcworkspace -scheme YourScheme -destination 'platform=iOS Simulator,name=iPhone 12,OS=14.4'
