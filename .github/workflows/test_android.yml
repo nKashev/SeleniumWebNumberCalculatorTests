@@ -1,0 +1,41 @@
+name: Selenuim Tests on Android
+
+on:
+#   push:
+#     branches:
+#       - main
+#   pull_request:
+#     branches:
+#       - main
+  schedule:
+    - cron: '00 15 * * *'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v2
+        with:
+          api-level: 30  # Specify the Android API level
+          target: default
+          arch: x86_64
+          profile: default
+
+      - name: Start emulator
+        run: |
+          emulator -avd test -no-snapshot -no-window -gpu off &
+          adb wait-for-device
+
+      - name: Run Android tests
+        run: ./gradlew connectedAndroidTest
