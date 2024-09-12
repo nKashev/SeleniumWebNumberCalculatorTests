@@ -1,9 +1,9 @@
 name: Selenium Tests on MacOS
 
 on:
-  # push:
-  #   branches:
-  #     - main
+  push:
+    branches:
+      - main
   # pull_request:
   #   branches:
   #     - main
@@ -18,19 +18,15 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Use 'setup-xcode' to ensure the correct version of Xcode is selected (optional)
-      - name: Set Xcode Version (Optional)
-        uses: maxim-lobanov/setup-xcode@v1
-        with:
-          xcode-version: '14.3'  # Specify the required Xcode version
-          select: true  # Automatically select the Xcode version
-
       - name: Install .NET 6.0 SDK
         run: |
           curl -SL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin --channel 6.0
           export PATH=$PATH:$HOME/.dotnet
           dotnet --list-sdks
-
+      - name: Install .NET 8.0 SDK (Optional)
+        run: |
+          curl -SL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin --channel 8.0
+          export PATH=$PATH:$HOME/.dotnet
       - name: Restore dependencies
         run: dotnet restore
 
