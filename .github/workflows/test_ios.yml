@@ -1,14 +1,14 @@
-name: Playwright Tests on Ubuntu
+name: Selenium Tests on iOS
 
 on:
-  push:
+#   push:
+#     branches:
+      # - main
+  pull_request:
     branches:
       - main
-#   pull_request:
-#     branches:
-#       - main
-  schedule:
-    - cron: '00 15 * * *'
+  # schedule:
+  #   - cron: '00 15 * * *'
 
 jobs:
   build:
