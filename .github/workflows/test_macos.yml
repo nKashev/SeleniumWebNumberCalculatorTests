@@ -15,20 +15,17 @@ jobs:
     runs-on: macos-latest
 
     steps:
-      # Use the latest actions with Node.js 20 support
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '20'
+      - name: Install .NET SDK 6.0
+        run: brew install --cask dotnet-sdk@6
 
-      - name: Install .NET SDK 8.0
-        run: brew install dotnet-sdk
+      - name: Install .NET SDK 8.0 (optional)
+        run: brew install --cask dotnet-sdk
 
       - name: Verify .NET SDK installation
-        run: dotnet --version
+        run: dotnet --list-sdks
 
       - name: Restore dependencies
         run: dotnet restore
