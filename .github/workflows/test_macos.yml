@@ -8,23 +8,33 @@ on:
   #   branches:
   #     - main
   schedule:
-    - cron: '0 15 * * *'  # Runs at 15:00 UTC every day
+    - cron: '0 15 * * *'
 
 jobs:
   build:
     runs-on: macos-latest
 
     steps:
+      # Use the latest actions with Node.js 20 support
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set up .NET SDK 6.0 (or any other tool needed)
-        run: |
-          brew install dotnet-sdk
-          dotnet --version
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
 
-      - name: Build
+      - name: Install .NET SDK 8.0
+        run: brew install dotnet-sdk
+
+      - name: Verify .NET SDK installation
+        run: dotnet --version
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build project
         run: dotnet build --configuration Release
 
-      - name: Test
+      - name: Run tests
         run: dotnet test --configuration Release --no-build
