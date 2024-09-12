@@ -4,9 +4,9 @@ on:
   push:
     branches:
       - main
-  # pull_request:
-  #   branches:
-  #     - main
+  pull_request:
+    branches:
+      - main
   schedule:
     - cron: '0 15 * * *'
 
@@ -18,14 +18,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Install .NET SDK 6.0
-        run: brew install --cask dotnet-sdk@6
+      - name: Install .NET 6.0 SDK
+        run: |
+          curl -SL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin --channel 6.0
+          export PATH=$PATH:$HOME/.dotnet
+          dotnet --list-sdks
 
-      - name: Install .NET SDK 8.0 (optional)
-        run: brew install --cask dotnet-sdk
-
-      - name: Verify .NET SDK installation
-        run: dotnet --list-sdks
+      - name: Install .NET 8.0 SDK (Optional)
+        run: |
+          curl -SL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin --channel 8.0
+          export PATH=$PATH:$HOME/.dotnet
 
       - name: Restore dependencies
         run: dotnet restore
