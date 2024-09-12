@@ -1,0 +1,30 @@
+name: Selenium Tests on MacOS
+
+on:
+  push:
+    branches:
+      - main
+  # pull_request:
+  #   branches:
+  #     - main
+  schedule:
+    - cron: '0 15 * * *'  # Runs at 15:00 UTC every day
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up .NET SDK 6.0 (or any other tool needed)
+        run: |
+          brew install dotnet-sdk
+          dotnet --version
+
+      - name: Build
+        run: dotnet build --configuration Release
+
+      - name: Test
+        run: dotnet test --configuration Release --no-build
