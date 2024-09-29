@@ -186,7 +186,7 @@ namespace Number_Calculator
                 driver?.FindElement(By.Id("calcButton")).Click();
 
                 string result = driver?.FindElement(By.CssSelector("pre")).Text ?? string.Empty;
-                Assert.That(result, Is.EqualTo("14"));
+                Assert.That(result, Is.EqualTo("15"));
 
                 test?.Info($"Calculation result: {result}");
             }
