@@ -58,7 +58,7 @@ jobs:
       - name: Test
         run: |
           mkdir TestResults
-          dotnet test --configuration Release --no-build --logger "nunit;LogFilePath=TestResults/TestResult.xml"
+          dotnet test --configuration Release --no-build --logger "trx;LogFilePath=TestResults/TestResult.trx"
 
       - name: Install ReportUnit
         run: |
