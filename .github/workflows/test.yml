@@ -59,13 +59,16 @@ jobs:
         run: |
           mkdir TestResults
           dotnet test --configuration Release --no-build --logger "trx;LogFilePath=TestResults/TestResult.trx"
+      
+      - name: List Test Results
+        run: ls -la TestResults
 
       - name: Install ReportGenerator
         run: dotnet tool install -g dotnet-reportgenerator-globaltool
 
       - name: Generate HTML Report
         run: |
-          reportgenerator -reports:TestResults/TestResult.xml -targetdir:TestResults/Report -reporttypes:Html
+          reportgenerator -reports:TestResults/TestResult.trx -targetdir:TestResults/Report -reporttypes:Html
 
       - name: Upload Test Report
         uses: actions/upload-artifact@v4
