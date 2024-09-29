@@ -1,9 +1,9 @@
 name: Selenium Tests on Ubuntu
 
 on:
-  # push:
-  #   branches:
-  #     - main
+  push:
+    branches:
+      - main
   # pull_request:
   #   branches:
   #     - main
@@ -56,4 +56,20 @@ jobs:
           export PATH=$PATH:/usr/local/bin
 
       - name: Test
-        run: dotnet test --configuration Release --no-build
+        run: |
+          mkdir TestResults
+          dotnet test --configuration Release --no-build --logger "nunit;LogFilePath=TestResults/TestResult.xml"
+
+      - name: Install ReportUnit
+        run: |
+          dotnet tool install -g ReportUnit
+
+      - name: Generate HTML Report
+        run: |
+          reportunit TestResults/TestResult.xml TestResults/
+
+      - name: Upload Test Report
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-report
+          path: TestResults/ReportUnitHtml
