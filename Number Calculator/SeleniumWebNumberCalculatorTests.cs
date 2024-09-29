@@ -5,8 +5,6 @@ using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Edge;
 using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Support.UI;
-using AventStack.ExtentReports;
-using AventStack.ExtentReports.Reporter;
 
 namespace Number_Calculator
 {
@@ -21,11 +19,6 @@ namespace Number_Calculator
         private readonly string browser;
         private IWebDriver? driver;
 
-        // ExtentReports variables
-        private static AventStack.ExtentReports.ExtentReports? extent;
-        private AventStack.ExtentReports.ExtentTest? test;
-
-
         // Parameterless constructor
         // public NumberCalculatorTests()
         // {
@@ -39,22 +32,9 @@ namespace Number_Calculator
             this.browser = browser ?? throw new ArgumentNullException(nameof(browser));
         }
 
-        [OneTimeSetUp]
-        public void SetupReport()
-        {
-            extent = new AventStack.ExtentReports.ExtentReports();
-            var htmlReporter = new ExtentHtmlReporter(Path.Combine(Directory.GetCurrentDirectory(), "TestResults.html"));
-            htmlReporter.Config.Theme = AventStack.ExtentReports.Reporter.Configuration.Theme.Dark;
-            htmlReporter.Config.DocumentTitle = "Number Calculator Test Report";
-            htmlReporter.Config.ReportName = "Selenium Test Results";
-            extent.AttachReporter(htmlReporter);
-        }
-
         [SetUp]
         public void Setup()
         {
-            test = extent?.CreateTest(TestContext.CurrentContext.Test.Name);
-
             var Url = "http://softuni-qa-loadbalancer-2137572849.eu-north-1.elb.amazonaws.com/number-calculator/";
             driver = GetWebDriver(browser);
             driver.Manage().Window.Maximize();
@@ -65,33 +45,9 @@ namespace Number_Calculator
             wait.Until(driver => ((IJavaScriptExecutor)driver).ExecuteScript("return document.readyState").Equals("complete"));
         }
 
-        [OneTimeTearDown]
-        public void TearDownReport()
-        {
-            extent?.Flush();
-        }
-
         [TearDown]
         public void TearDown()
         {
-            var status = TestContext.CurrentContext.Result.Outcome.Status;
-            var stacktrace = TestContext.CurrentContext.Result.StackTrace;
-            var errorMessage = TestContext.CurrentContext.Result.Message;
-
-            if (status == NUnit.Framework.Interfaces.TestStatus.Failed)
-            {
-                test?.Fail($"Test failed with message: {errorMessage}");
-                test?.Fail($"Stack Trace: {stacktrace}");
-
-                // Capture screenshot on failure
-                string screenshot = CaptureScreenshot();
-                test?.AddScreenCaptureFromPath(screenshot);
-            }
-            else if (status == NUnit.Framework.Interfaces.TestStatus.Passed)
-            {
-                test?.Pass("Test passed");
-            }
-
             if (driver != null)
             {
                 driver.Quit();
@@ -166,35 +122,18 @@ namespace Number_Calculator
             return System.IO.Path.Combine(driversDirectory, driverFileName);
         }
 
-        private string CaptureScreenshot()
-        {
-            string screenshotPath = $"screenshot_{DateTime.Now:yyyyMMddHHmmss}.png";
-            ((ITakesScreenshot)driver)?.GetScreenshot().SaveAsFile(screenshotPath);
-            return screenshotPath;
-        }
-
         [Test, Order(1), Category("InputValidation")]
         public void ValidateFieldsAcceptOnlyNumbers()
         {
-            try
-            {
-                driver?.FindElement(By.Id("number1")).SendKeys("5");
-                var dropdown = driver?.FindElement(By.Id("operation"));
-                dropdown?.FindElement(By.XPath("//option[. = '+ (sum)']")).Click();
+            driver.FindElement(By.Id("number1")).SendKeys("5");
+            var dropdown = driver.FindElement(By.Id("operation"));
+            dropdown.FindElement(By.XPath("//option[. = '+ (sum)']")).Click();
 
-                driver?.FindElement(By.Id("number2")).SendKeys("10");
-                driver?.FindElement(By.Id("calcButton")).Click();
+            driver.FindElement(By.Id("number2")).SendKeys("10");
+            driver.FindElement(By.Id("calcButton")).Click();
 
-                string result = driver?.FindElement(By.CssSelector("pre")).Text ?? string.Empty;
-                Assert.That(result, Is.EqualTo("15"));
-
-                test?.Info($"Calculation result: {result}");
-            }
-            catch (Exception ex)
-            {
-                test?.Fail($"Test failed with exception: {ex.Message}");
-                throw;
-            }
+            string result = driver.FindElement(By.CssSelector("pre")).Text ?? string.Empty;
+            Assert.That(result, Is.EqualTo("15"));
         }
 
         //[Test, Order(2), Category("InputValidation")]
