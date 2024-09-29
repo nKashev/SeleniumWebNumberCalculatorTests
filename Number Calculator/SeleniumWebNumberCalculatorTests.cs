@@ -152,24 +152,14 @@ namespace Number_Calculator
         [Test, Order(3), Category("InputValidation")]
         public void ValidateField2CantBeEmpty()
         {
-           _test = _extent.CreateTest("InputValidation");
+           driver.FindElement(By.Id("number1")).SendKeys("13");
 
-           try
-           {
-               driver.FindElement(By.Id("number1")).SendKeys("13");
-
-               var dropdown = driver.FindElement(By.Id("operation"));
-               dropdown.FindElement(By.XPath("//option[. = '- (subtract)']")).Click();
+           var dropdown = driver.FindElement(By.Id("operation"));
+           dropdown.FindElement(By.XPath("//option[. = '- (subtract)']")).Click();
             
-               driver.FindElement(By.Id("number2")).SendKeys(string.Empty);
-               driver.FindElement(By.Id("calcButton")).Click();
-               Assert.That(driver.FindElement(By.CssSelector("i")).Text, Is.EqualTo("invalid input"));
-           }
-           catch (Exception ex)
-           {
-               _test.Fail("Test failed: " + ex.Message);
-               throw; // Rethrow to ensure NUnit captures the failure
-           }
+           driver.FindElement(By.Id("number2")).SendKeys(string.Empty);
+           driver.FindElement(By.Id("calcButton")).Click();
+           Assert.That(driver.FindElement(By.CssSelector("i")).Text, Is.EqualTo("invalid input"));
         }
 
         [Test, Order(4), Category("InputValidation")]
