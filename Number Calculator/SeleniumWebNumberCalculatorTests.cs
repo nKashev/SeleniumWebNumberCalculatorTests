@@ -43,7 +43,7 @@ namespace Number_Calculator
         public void SetupReport()
         {
             extent = new AventStack.ExtentReports.ExtentReports();
-            var htmlReporter = new ExtentHtmlReporter("TestResults/TestResults.html");
+            var htmlReporter = new ExtentHtmlReporter(Path.Combine(Directory.GetCurrentDirectory(), "TestResults.html"));
             htmlReporter.Config.Theme = AventStack.ExtentReports.Reporter.Configuration.Theme.Dark;
             htmlReporter.Config.DocumentTitle = "Number Calculator Test Report";
             htmlReporter.Config.ReportName = "Selenium Test Results";
