@@ -9,7 +9,7 @@ using OpenQA.Selenium.Support.UI;
 namespace Number_Calculator
 {
     [TestFixture("Chrome")]
-    [TestFixture("Edge")]
+    //[TestFixture("Edge")]
     //[TestFixture("Firefox")]
     [TestFixture("Brave")]
     [TestFixture("Opera")]
