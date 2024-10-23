@@ -1,6 +1,7 @@
 name: Selenium Tests on MacOS
 
 on:
+  workflow_dispatch:
   # push:
   #   branches:
   #     - main
